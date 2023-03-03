@@ -6,12 +6,9 @@ package main
 
 import (
 	"database/sql"
-	//"encoding/json"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
-	"log"
-	"net/http"
-	"strings"
 )
 
 const (
@@ -23,34 +20,28 @@ const (
 	database = "ogd"
 )
 
-func returnHello(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(w, "{\"message\":\"Hello World! I'm the Go API.\"}")
-	//json.NewEncoder(w).Encode(Articles)
-}
-
-func returnName(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	name := strings.TrimPrefix(r.URL.RawQuery, "/hello")
-	fmt.Fprintf(w, "{\"message\":\"Hello "+strings.Split(name, "=")[1]+"! I'm the Go API.\"}")
-}
-
-func handleRequests() {
-	http.HandleFunc("/", returnHello)
-	http.HandleFunc("/hello", returnName)
-	log.Fatal(http.ListenAndServe(":9000", nil))
-}
+var db *sql.DB
 
 func main() {
 	fmt.Println("Server started on port 9000...")
 	fmt.Println("")
 	fmt.Println("Possible calls:")
 	fmt.Println("http://localhost:9000/")
-	fmt.Println("GET: http://localhost:9000/hello?name=ic20b050")
+	fmt.Println("GET: http://localhost:9000/hello/ic20b050")
 
 	//handleRequests()
 
+	router := gin.Default()
+	router.GET("/", home)
+	router.GET("/hello/:name", sayHelloGet)
+	router.POST("/hello", sayHelloPost)
+
+	router.Run("localhost:9000")
+
+	//selectFromDB()
+}
+
+func initDB() {
 	// connection string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, database)
 
@@ -64,12 +55,13 @@ func main() {
 	// check db
 	err = db.Ping()
 	CheckError(err)
-
-	fmt.Println("Connected!")
-	selectFromDB(db)
 }
 
-func selectFromDB(db *sql.DB) {
+func selectFromDB() {
+	if db == nil {
+		initDB()
+	}
+
 	rows, err := db.Query(`SELECT gemeindename FROM public.gemeinde WHERE gkz=10101 LIMIT 1`)
 	CheckError(err)
 
