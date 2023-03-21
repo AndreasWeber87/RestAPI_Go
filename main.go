@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	//gin.SetMode(gin.ReleaseMode)
 	fmt.Println("Server started on port 9000...")
 	fmt.Println("")
 	fmt.Println("Possible calls:")
@@ -27,5 +28,5 @@ func main() {
 
 	router.GET("/getGemeinde/:id", getGemeinde)
 
-	router.Run("localhost:9000")
+	router.Run(":9000")
 }

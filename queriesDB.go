@@ -16,8 +16,8 @@ var db *sql.DB
 
 func initDB() {
 	const (
-		host = "127.0.0.1"
-		// host = "192.168.0.2" // container ip
+		//host = "127.0.0.1"
+		host     = "192.168.0.2" // container ip
 		port     = 5432
 		user     = "postgres"
 		password = "xsmmsgbAMfIOIWPPBrsc"
