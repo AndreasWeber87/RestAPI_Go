@@ -1,8 +1,15 @@
-FROM golang:1.19
+FROM golang:1.20.2-alpine
 
-WORKDIR /home/ic20b050/app
-ADD . /home/ic20b050/app
+# Workdir innerhalb des Containers festlegen
+WORKDIR /go/src
+# Kopiert das aktuelle Verzeichnis vom Host in das Image Verzeichnis
+ADD . /go/src
 
-EXPOSE 9000
+# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
+RUN go mod download && go mod verify
+RUN go build -v -o /go/src/app ./...
 
-CMD go run main.go
+# gibt den Port 7000 frei
+EXPOSE 7000
+
+CMD ["/go/src/app"]
