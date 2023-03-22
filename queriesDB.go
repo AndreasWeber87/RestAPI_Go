@@ -45,7 +45,7 @@ func getGemeinde(c *gin.Context) {
 	}
 
 	var response []jsonGemeinde
-	id := c.Param("id")
+	id := c.Query("id")
 	var sqlQuery = "SELECT gemeindename FROM public.gemeinde WHERE gkz=" + id + " LIMIT 1"
 
 	rows, err := db.Query(sqlQuery)

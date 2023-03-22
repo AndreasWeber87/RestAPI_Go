@@ -16,18 +16,18 @@ func main() {
 	fmt.Println("")
 	fmt.Println("Possible calls:")
 	fmt.Println("http://localhost:7000/")
-	fmt.Println("GET: http://localhost:7000/hello/ic20b050")
+	fmt.Println("GET: http://localhost:7000/hello?name=ic20b050")
 	fmt.Println("POST: http://localhost:7000/hello  name=ic20b050")
 	fmt.Println("")
-	fmt.Println("GET: http://localhost:7000/getGemeinde/10101")
+	fmt.Println("GET: http://localhost:7000/getGemeinde?id=10101")
 
 	router := gin.Default()
 	router.GET("/", home)
 
-	router.GET("/hello/:name", sayHelloGet)
+	router.GET("/hello", sayHelloGet)
 	router.POST("/hello", sayHelloPost)
 
-	router.GET("/getGemeinde/:id", getGemeinde)
+	router.GET("/getGemeinde", getGemeinde)
 
 	router.Run(":7000")
 }

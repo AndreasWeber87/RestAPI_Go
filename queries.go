@@ -22,7 +22,7 @@ func home(c *gin.Context) {
 }
 
 func sayHelloGet(c *gin.Context) {
-	name := c.Param("name")
+	name := c.Query("name")
 
 	var response = jsonMessage{
 		Message: "Hello " + name + "! I'm the Go API.",
