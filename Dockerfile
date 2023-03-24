@@ -1,7 +1,7 @@
 FROM golang:1.20.2-alpine
 
 # Workdir innerhalb des Containers festlegen
-WORKDIR /home/ic20b050/app
+WORKDIR /home/ic20b050/app 
 # Kopiert das aktuelle Verzeichnis vom Host in das Image Verzeichnis
 ADD . /home/ic20b050/app
 
