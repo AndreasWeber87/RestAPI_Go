@@ -2,6 +2,7 @@
 // https://go.dev/doc/tutorial/web-service-gin
 // https://golangdocs.com/golang-postgresql-example
 // https://dev.to/umschaudhary/blog-project-with-go-gin-mysql-and-docker-part-1-3cg1
+// https://go.dev/doc/database/prepared-statements
 
 package main
 
@@ -23,5 +24,12 @@ func main() {
 
 	router.GET("/getGemeinde", getGemeinde)
 
-	router.Run(":7000")
+	err := router.Run(":10000")
+	checkError(err)
+}
+
+func checkError(err error) {
+	if err != nil {
+		panic(err)
+	}
 }

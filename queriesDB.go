@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"net/http"
@@ -12,61 +10,25 @@ type jsonGemeinde struct {
 	Gemeindename string `json:"gemeindename"`
 }
 
-var db *sql.DB
-
-func initDB() {
-	const (
-		//host = "127.0.0.1"
-		host     = "192.168.0.2" // container ip
-		port     = 5432
-		user     = "postgres"
-		password = "xsmmsgbAMfIOIWPPBrsc"
-		database = "ogd"
-	)
-
-	// connection string
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, database)
-	var err error
-	// open database
-	db, err = sql.Open("postgres", psqlconn)
-	CheckError(err)
-
-	// close database
-	//defer db.Close()
-
-	// check db
-	err = db.Ping()
-	CheckError(err)
-}
+var dbConn = connectDB()
 
 func getGemeinde(c *gin.Context) {
-	if db == nil {
-		initDB()
-	}
-
 	var response []jsonGemeinde
-	id := c.Query("id")
-	var sqlQuery = "SELECT gemeindename FROM public.gemeinde WHERE gkz=" + id + " LIMIT 1"
+	var id = c.Query("id")
 
-	rows, err := db.Query(sqlQuery)
-	CheckError(err)
+	stmt, err := dbConn.Prepare("SELECT gemeindename FROM public.gemeinde WHERE gkz=$1 LIMIT 1")
+	checkError(err)
+	rows, err := stmt.Query(id)
+	checkError(err)
 
-	defer rows.Close()
 	for rows.Next() {
-		var name string
+		var gemeinde string
 
-		err = rows.Scan(&name)
-		CheckError(err)
+		err = rows.Scan(&gemeinde)
+		checkError(err)
 
-		response = append(response, jsonGemeinde{Gemeindename: name})
+		response = append(response, jsonGemeinde{Gemeindename: gemeinde})
 	}
 
-	CheckError(err)
 	c.IndentedJSON(http.StatusOK, response)
-}
-
-func CheckError(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
