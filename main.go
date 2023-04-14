@@ -32,7 +32,7 @@ func main() {
 	router.GET("/getGemeinde", getGemeinde)
 	router.DELETE("/deleteGemeinde/:gkz", deleteGemeinde)
 
-	err := router.Run(":10000")
+	err := router.Run(":7000")
 	checkError(err)
 }
 
