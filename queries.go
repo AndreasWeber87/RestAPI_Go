@@ -32,10 +32,8 @@ func connectDB() *sql.DB {
 
 	// connection string
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, database)
-	var err error
-	var dbConn *sql.DB
 	// open database
-	dbConn, err = sql.Open("postgres", psqlconn)
+	dbConn, err := sql.Open("postgres", psqlconn)
 	checkError(err)
 
 	// check db
@@ -57,7 +55,7 @@ func home(c *gin.Context) {
 // POST: http://localhost:7000/createTable
 // BODY:
 func createTable(c *gin.Context) {
-	var sqlQuery = `DROP TABLE IF EXISTS public.strasse;
+	const sqlQuery = `DROP TABLE IF EXISTS public.strasse;
 
 CREATE TABLE IF NOT EXISTS public.strasse
 (
@@ -80,7 +78,7 @@ func addStrasse(c *gin.Context) {
 	err := c.BindJSON(&strasse)
 	checkError(err)
 
-	var sqlQuery = "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);"
+	const sqlQuery = "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
@@ -102,7 +100,7 @@ func changeStrasse(c *gin.Context) {
 	err = c.BindJSON(&strasse)
 	checkError(err)
 
-	var sqlQuery = "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;"
+	const sqlQuery = "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
@@ -117,7 +115,7 @@ func getStrasse(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Query("skz"))
 	checkError(err)
 
-	var sqlQuery = "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;"
+	const sqlQuery = "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
@@ -141,7 +139,7 @@ func deleteStrasse(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Param("skz"))
 	checkError(err)
 
-	var sqlQuery = "DELETE FROM public.strasse WHERE skz=$1;"
+	const sqlQuery = "DELETE FROM public.strasse WHERE skz=$1;"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
