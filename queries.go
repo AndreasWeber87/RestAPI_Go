@@ -117,7 +117,7 @@ func getStrasse(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Query("skz"))
 	checkError(err)
 
-	var sqlQuery = "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1"
+	var sqlQuery = "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
