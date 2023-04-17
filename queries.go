@@ -45,11 +45,7 @@ func connectDB() *sql.DB {
 
 // GET: http://localhost:7000/
 func home(c *gin.Context) {
-	var response = jsonMessage{
-		Message: "Hello World! I'm the Go API.",
-	}
-
-	c.IndentedJSON(http.StatusOK, response)
+	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Hello World! I'm the Go API."})
 }
 
 // POST: http://localhost:7000/createTable
@@ -66,7 +62,7 @@ CREATE TABLE IF NOT EXISTS public.strasse
 	_, err := dbConn.Exec(sqlQuery)
 	checkError(err)
 
-	c.Status(http.StatusCreated)
+	c.IndentedJSON(http.StatusCreated, jsonMessage{Message: "Table created successfully."})
 }
 
 // POST: http://localhost:7000/addStrasse
@@ -85,7 +81,7 @@ func addStrasse(c *gin.Context) {
 	_, err = stmt.Exec(strasse.SKZ, strasse.Strassenname)
 	checkError(err)
 
-	c.Status(http.StatusCreated)
+	c.IndentedJSON(http.StatusCreated, jsonMessage{Message: "Street added successfully."})
 }
 
 // PUT: http://localhost:7000/changeStrasse/108711
@@ -107,7 +103,7 @@ func changeStrasse(c *gin.Context) {
 	_, err = stmt.Exec(strasse.Strassenname, skz)
 	checkError(err)
 
-	c.Status(http.StatusOK)
+	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Street changed successfully."})
 }
 
 // GET: http://localhost:7000/getStrasse?skz=108711
@@ -127,7 +123,7 @@ func getStrasse(c *gin.Context) {
 	err = rows.Scan(&strassenname)
 
 	if err != nil {
-		c.Status(http.StatusNotFound)
+		c.IndentedJSON(http.StatusNotFound, jsonMessage{Message: "No street found."})
 		return
 	}
 
@@ -146,5 +142,5 @@ func deleteStrasse(c *gin.Context) {
 	_, err = stmt.Exec(skz)
 	checkError(err)
 
-	c.Status(http.StatusOK)
+	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Street deleted successfully."})
 }
