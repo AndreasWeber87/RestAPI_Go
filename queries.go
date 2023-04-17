@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS public.strasse
     strassenname character varying(100) COLLATE pg_catalog."default",
     CONSTRAINT strasse_pkey PRIMARY KEY (skz)
 )`
-	_, err := dbConn.Query(sqlQuery)
+	_, err := dbConn.Exec(sqlQuery)
 	checkError(err)
 
 	c.Status(http.StatusCreated)
@@ -82,7 +82,7 @@ func addStrasse(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Query(strasse.SKZ, strasse.Strassenname)
+	_, err = stmt.Exec(strasse.SKZ, strasse.Strassenname)
 	checkError(err)
 
 	c.Status(http.StatusCreated)
@@ -104,7 +104,7 @@ func changeStrasse(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Query(strasse.Strassenname, skz)
+	_, err = stmt.Exec(strasse.Strassenname, skz)
 	checkError(err)
 
 	c.Status(http.StatusOK)
@@ -143,7 +143,7 @@ func deleteStrasse(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Query(skz)
+	_, err = stmt.Exec(skz)
 	checkError(err)
 
 	c.Status(http.StatusOK)
