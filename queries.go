@@ -13,9 +13,9 @@ type jsonMessage struct {
 	Message string `json:"message"`
 }
 
-type jsonStrasse struct {
-	SKZ          int    `json:"skz"`
-	Strassenname string `json:"strassenname"`
+type jsonStreet struct {
+	SKZ        int    `json:"skz"`
+	Streetname string `json:"streetname"`
 }
 
 var dbConn = connectDB()
@@ -65,49 +65,49 @@ CREATE TABLE IF NOT EXISTS public.strasse
 	c.IndentedJSON(http.StatusCreated, jsonMessage{Message: "Table created successfully."})
 }
 
-// POST: http://localhost:7000/addStrasse
+// POST: http://localhost:7000/addStreet
 // HEADER: Content-Type: application/json
-// BODY: {"skz":108711,"strassenname":"Andromedastraße"}
-func addStrasse(c *gin.Context) {
-	var strasse jsonStrasse
+// BODY: {"skz":108711,"streetname":"Andromedastraße"}
+func addStreet(c *gin.Context) {
+	var street jsonStreet
 
-	err := c.BindJSON(&strasse)
+	err := c.BindJSON(&street)
 	checkError(err)
 
 	const sqlQuery = "INSERT INTO public.strasse(skz, strassenname) VALUES ($1, $2);"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Exec(strasse.SKZ, strasse.Strassenname)
+	_, err = stmt.Exec(street.SKZ, street.Streetname)
 	checkError(err)
 
 	c.IndentedJSON(http.StatusCreated, jsonMessage{Message: "Street added successfully."})
 }
 
-// PUT: http://localhost:7000/changeStrasse/108711
+// PUT: http://localhost:7000/changeStreet/108711
 // HEADER: Content-Type: application/json
-// BODY: {"strassenname":"Andromedastraße2"}
-func changeStrasse(c *gin.Context) {
+// BODY: {"streetname":"Andromedastraße2"}
+func changeStreet(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Param("skz"))
 	checkError(err)
 
-	var strasse jsonStrasse
+	var street jsonStreet
 
-	err = c.BindJSON(&strasse)
+	err = c.BindJSON(&street)
 	checkError(err)
 
 	const sqlQuery = "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;"
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Exec(strasse.Strassenname, skz)
+	_, err = stmt.Exec(street.Streetname, skz)
 	checkError(err)
 
 	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Street changed successfully."})
 }
 
-// GET: http://localhost:7000/getStrasse?skz=108711
-func getStrasse(c *gin.Context) {
+// GET: http://localhost:7000/getStreet?skz=108711
+func getStreet(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Query("skz"))
 	checkError(err)
 
@@ -119,19 +119,19 @@ func getStrasse(c *gin.Context) {
 	checkError(err)
 
 	rows.Next()
-	var strassenname string
-	err = rows.Scan(&strassenname)
+	var streetname string
+	err = rows.Scan(&streetname)
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNotFound, jsonMessage{Message: "No street found."})
 		return
 	}
 
-	c.IndentedJSON(http.StatusOK, jsonStrasse{SKZ: skz, Strassenname: strassenname})
+	c.IndentedJSON(http.StatusOK, jsonStreet{SKZ: skz, Streetname: streetname})
 }
 
-// DELETE: http://localhost:7000/deleteStrasse/108711
-func deleteStrasse(c *gin.Context) {
+// DELETE: http://localhost:7000/deleteStreet/108711
+func deleteStreet(c *gin.Context) {
 	skz, err := strconv.Atoi(c.Param("skz"))
 	checkError(err)
 
