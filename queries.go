@@ -115,18 +115,15 @@ func getStreet(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	rows, err := stmt.Query(skz)
-	checkError(err)
-
-	rows.Next()
 	var streetname string
-	err = rows.Scan(&streetname)
+	err = stmt.QueryRow(skz).Scan(&streetname)
 
-	if err != nil {
+	if err == sql.ErrNoRows {
 		c.IndentedJSON(http.StatusNotFound, jsonMessage{Message: "No street found."})
 		return
 	}
 
+	checkError(err)
 	c.IndentedJSON(http.StatusOK, jsonStreet{SKZ: skz, Streetname: streetname})
 }
 
