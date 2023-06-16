@@ -99,8 +99,16 @@ func changeStreet(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Exec(street.Streetname, skz)
+	res, err := stmt.Exec(street.Streetname, skz)
 	checkError(err)
+
+	rows, err := res.RowsAffected()
+	checkError(err)
+
+	if rows == 0 {
+		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "ID not found."})
+		return
+	}
 
 	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Street changed successfully."})
 }
