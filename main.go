@@ -43,7 +43,6 @@ func main() {
 	router.DELETE("/deleteStreet/:skz", deleteStreet)
 
 	err := router.Run(":7000")
-	//err := router.Run(":10000")
 	checkError(err)
 }
 

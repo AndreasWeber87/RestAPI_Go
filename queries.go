@@ -22,8 +22,7 @@ var dbConn = connectDB()
 
 func connectDB() *sql.DB {
 	const (
-		//host = "127.0.0.1"
-		host     = "192.168.0.2" // container ip
+		host     = "192.168.0.2"
 		port     = 5432
 		user     = "postgres"
 		password = "xsmmsgbAMfIOIWPPBrsc"
@@ -53,7 +52,7 @@ func home(c *gin.Context) {
 func createTable(c *gin.Context) {
 	const sqlQuery = `DROP TABLE IF EXISTS public.strasse;
 
-CREATE TABLE IF NOT EXISTS public.strasse
+CREATE TABLE public.strasse
 (
     skz integer NOT NULL,
     strassenname character varying(100) COLLATE pg_catalog."default",
@@ -119,7 +118,7 @@ func getStreet(c *gin.Context) {
 	err = stmt.QueryRow(skz).Scan(&streetname)
 
 	if err == sql.ErrNoRows {
-		c.IndentedJSON(http.StatusNotFound, jsonMessage{Message: "No street found."})
+		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "No street found."})
 		return
 	}
 
