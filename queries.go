@@ -150,7 +150,7 @@ func deleteStreet(c *gin.Context) {
 	checkError(err)
 
 	if rows == 0 {
-		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "No street found."})
+		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "ID not found."})
 		return
 	}
 
