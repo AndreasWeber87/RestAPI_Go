@@ -126,7 +126,7 @@ func getStreet(c *gin.Context) {
 	err = stmt.QueryRow(skz).Scan(&streetname)
 
 	if err == sql.ErrNoRows {
-		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "No street found."})
+		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "ID not found."})
 		return
 	}
 
