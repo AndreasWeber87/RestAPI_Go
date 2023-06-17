@@ -143,8 +143,16 @@ func deleteStreet(c *gin.Context) {
 	stmt, err := dbConn.Prepare(sqlQuery)
 	checkError(err)
 
-	_, err = stmt.Exec(skz)
+	res, err := stmt.Exec(skz)
 	checkError(err)
+
+	rows, err := res.RowsAffected()
+	checkError(err)
+
+	if rows == 0 {
+		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "No street found."})
+		return
+	}
 
 	c.IndentedJSON(http.StatusOK, jsonMessage{Message: "Street deleted successfully."})
 }
