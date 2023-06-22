@@ -12,7 +12,6 @@ import (
 )
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
 	fmt.Println("Server started on port 7000...")
 	fmt.Println("")
 	fmt.Println("Possible calls:")
