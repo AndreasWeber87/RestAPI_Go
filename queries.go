@@ -26,7 +26,7 @@ func connectDB() *sql.DB {
 		port     = 5432
 		user     = "postgres"
 		password = "xsmmsgbAMfIOIWPPBrsc"
-		database = "ogd"
+		database = "OGD"
 	)
 
 	// connection string
