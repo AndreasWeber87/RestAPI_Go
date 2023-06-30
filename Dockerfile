@@ -1,4 +1,4 @@
-FROM golang:1.20.3-alpine
+FROM golang:1.20.5-alpine
 
 # set Workdir inside the image
 WORKDIR /home/ic20b050/app 
