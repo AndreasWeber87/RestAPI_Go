@@ -33,8 +33,9 @@ func main() {
 	fmt.Println("DELETE: http://localhost:7000/deleteStreet/108711")
 
 	router := gin.Default()
-	router.GET("/", home)
 
+	// configure the API endpoints
+	router.GET("/", home)
 	router.POST("/createTable", createTable)
 	router.POST("/addStreet", addStreet)
 	router.PUT("/changeStreet/:skz", changeStreet)

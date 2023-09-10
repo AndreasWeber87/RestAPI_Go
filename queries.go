@@ -9,10 +9,12 @@ import (
 	"strconv"
 )
 
+// Used as a return message for the API endpoints.
 type jsonMessage struct {
 	Message string `json:"message"`
 }
 
+// Used as a return data for the getStreet endpoint.
 type jsonStreet struct {
 	SKZ        int    `json:"skz"`
 	Streetname string `json:"streetname"`
@@ -87,12 +89,12 @@ func addStreet(c *gin.Context) {
 // HEADER: Content-Type: application/json
 // BODY: {"streetname":"Andromedastraße2"}
 func changeStreet(c *gin.Context) {
-	skz, err := strconv.Atoi(c.Param("skz"))
+	skz, err := strconv.Atoi(c.Param("skz")) // cast the skz parameter into an integer
 	checkError(err)
 
 	var street jsonStreet
 
-	err = c.BindJSON(&street)
+	err = c.BindJSON(&street) // cast the parameters into the jsonStreet type
 	checkError(err)
 
 	const sqlQuery = "UPDATE public.strasse SET strassenname=$1 WHERE skz=$2;"
@@ -115,7 +117,7 @@ func changeStreet(c *gin.Context) {
 
 // GET: http://localhost:7000/getStreet?skz=108711
 func getStreet(c *gin.Context) {
-	skz, err := strconv.Atoi(c.Query("skz"))
+	skz, err := strconv.Atoi(c.Query("skz")) // cast the skz parameter into an integer
 	checkError(err)
 
 	const sqlQuery = "SELECT strassenname FROM public.strasse WHERE skz=$1 LIMIT 1;"
@@ -123,7 +125,7 @@ func getStreet(c *gin.Context) {
 	checkError(err)
 
 	var streetname string
-	err = stmt.QueryRow(skz).Scan(&streetname)
+	err = stmt.QueryRow(skz).Scan(&streetname) // execute the query and write the output to streetname
 
 	if err == sql.ErrNoRows {
 		c.IndentedJSON(http.StatusOK, jsonMessage{Message: "ID not found."})
@@ -136,7 +138,7 @@ func getStreet(c *gin.Context) {
 
 // DELETE: http://localhost:7000/deleteStreet/108711
 func deleteStreet(c *gin.Context) {
-	skz, err := strconv.Atoi(c.Param("skz"))
+	skz, err := strconv.Atoi(c.Param("skz")) // cast the skz parameter into an integer
 	checkError(err)
 
 	const sqlQuery = "DELETE FROM public.strasse WHERE skz=$1;"
